@@ -482,6 +482,14 @@ docker build \
   --build-arg NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY="$NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY" \
   -t consultation-app .
 ```
+# Build for amd64
+``` 
+docker buildx build \
+  --platform linux/amd64 \
+  --build-arg NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY="$NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY" \
+  -t consultation-app \
+  --load .
+````
 
 **Windows PowerShell**:
 ```powershell
@@ -604,11 +612,22 @@ docker build \
   --platform linux/amd64 \
   --build-arg NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY="$NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY" \
   -t consultation-app .
+# Build for amd64
+
+docker buildx build \
+  --platform linux/amd64 \
+  --build-arg NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY="$NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY" \
+  -t consultation-app \
+  --load .
 
 # 3. Tag your image (using your .env values!)
 docker tag consultation-app:latest $AWS_ACCOUNT_ID.dkr.ecr.$DEFAULT_AWS_REGION.amazonaws.com/consultation-app:latest
 
 # 4. Push to ECR
+aws ecr get-login-password --region "$DEFAULT_AWS_REGION" \
+| docker login --username AWS --password-stdin \
+"$AWS_ACCOUNT_ID.dkr.ecr.$DEFAULT_AWS_REGION.amazonaws.com"
+
 docker push $AWS_ACCOUNT_ID.dkr.ecr.$DEFAULT_AWS_REGION.amazonaws.com/consultation-app:latest
 ```
 
